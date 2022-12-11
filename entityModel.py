@@ -16,6 +16,8 @@ class Entity(pygame.sprite.Sprite):
         """
         super().__init__()
 
+        self.speed = 2.0
+
         self.image = pygame.Surface([2*ENTITY_RADIUS, 2*ENTITY_RADIUS])
         self.image.fill(COLOR_KEY)
         self.image.set_colorkey(COLOR_KEY)
@@ -24,4 +26,9 @@ class Entity(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.move_ip(pos)
+
+
+    def update(self):
+        self.move_randomly()
+
 
