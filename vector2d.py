@@ -2,13 +2,13 @@ import math
 from random import random
 
 PI = math.pi
-WANDER_FRACTION = 0.1
+WANDER_FRACTION = 0.025
 
 
 class Vector2D:
     def __init__(self):
         self.direction = 2 * PI * random()
-        self.velocity = 200.0
+        self.velocity = 100.0
 
     def get_relative_pos(self, delta_time):
         x = self.velocity * math.cos(self.direction) * delta_time

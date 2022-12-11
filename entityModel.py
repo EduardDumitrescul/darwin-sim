@@ -9,6 +9,9 @@ ENTITY_RADIUS = 20
 WHITE = (255, 255, 255)
 COLOR_KEY = (255, 0, 255)
 
+BASE_COLOR = (188, 169, 225)
+SELECTED_COLOR = (152,167,242)
+
 
 class Entity(pygame.sprite.Sprite):
     def __init__(self, pos=(0, 0)):
@@ -28,9 +31,14 @@ class Entity(pygame.sprite.Sprite):
         self.image.fill(COLOR_KEY)
         self.image.set_colorkey(COLOR_KEY)
 
-        pygame.draw.circle(self.image, pygame.Color("#0000AA"), (ENTITY_RADIUS, ENTITY_RADIUS), ENTITY_RADIUS)
+        pygame.draw.circle(self.image, BASE_COLOR, (ENTITY_RADIUS, ENTITY_RADIUS), ENTITY_RADIUS)
 
         self.rect = self.image.get_rect()
         self.rect.move_ip(pos)
 
+    def set_selected(self, boolean):
+        if boolean:
+            pygame.draw.circle(self.image, SELECTED_COLOR, (ENTITY_RADIUS, ENTITY_RADIUS), ENTITY_RADIUS)
+        else:
+            pygame.draw.circle(self.image, BASE_COLOR, (ENTITY_RADIUS, ENTITY_RADIUS), ENTITY_RADIUS)
 

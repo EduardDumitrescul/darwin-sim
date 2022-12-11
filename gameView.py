@@ -27,12 +27,14 @@ class GameView:
         frame_count = 0
 
         while running:
-            delta_time = clock.tick() / 1000
+            delta_time = clock.tick(60) / 1000
             print(delta_time)
             frame_count += 1
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.game_data.check_entity_clicked(pygame.mouse.get_pos())
 
             print(f'frame {frame_count}')
             if frame_count % 4 == 0:

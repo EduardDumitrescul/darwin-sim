@@ -38,7 +38,7 @@ class GameData:
 
             vector = entity.vector.get_random_direction()
             x, y = entity.rect.x, entity.rect.y
-            xp, yp = vector.get_relative_pos(1)
+            xp, yp = vector.get_relative_pos(1/10)
             if 0 <= x + xp <= self.world_width - 2 * entityModel.ENTITY_RADIUS and \
                     0 <= y + yp <= self.world_height - 2 * entityModel.ENTITY_RADIUS:
                 entity.vector = vector
@@ -46,3 +46,10 @@ class GameData:
                 vector.direction = 2 * math.pi * random()
 
             entity.vector = vector
+
+    def check_entity_clicked(self, mouse_pos):
+        for entity in self.entity_list:
+            if entity.rect.collidepoint(mouse_pos):
+                entity.set_selected(True)
+            else:
+                entity.set_selected(False)
