@@ -18,7 +18,7 @@ class GameData:
         self.create_entities()
 
         self.in_bounds = lambda x, y: 0 <= x <= self.world_width - 2 * entityModel.ENTITY_RADIUS and \
-                                 0 <= y <= self.world_height - 2 * entityModel.ENTITY_RADIUS
+                                      0 <= y <= self.world_height - 2 * entityModel.ENTITY_RADIUS
 
     def create_entities(self):
         for i in range(self.entity_count):
@@ -40,19 +40,38 @@ class GameData:
                 entity.vector.direction = 2 * math.pi * random()
 
     def compute_path(self):
-        for i in range(0, len(self.entity_list)):
+        for i in range(len(self.entity_list)):
             entity = self.entity_list[i]
+            enemy_angle_sum = 0
+            enemy_count = 0
+            for j in range(0, len(self.entity_list)):
+                if i == j:
+                    continue
 
-            vector = entity.vector.get_random_direction()
-            x, y = entity.rect.x, entity.rect.y
-            xp, yp = vector.get_relative_pos(1/10)
-            if self.in_bounds(x, y):
-                entity.vector = vector
-            else:
-                vector.direction = 2 * math.pi * random()
+                enemy = self.entity_list[j]
+                if entity.distance(enemy) > entity.vision:
+                    continue
 
+                enemy_angle_sum += entity.angle(enemy)
+                enemy_count += 1
+
+            if enemy_count == 0:
+                self.choose_random_path(entity)
+                continue
+
+            enemy_angle_sum /= enemy_count
+            entity.vector.direction = (enemy_angle_sum + math.pi) % (2 * math.pi)
+
+    def choose_random_path(self, entity):
+        vector = entity.vector.get_random_direction()
+        x, y = entity.rect.x, entity.rect.y
+        xp, yp = vector.get_relative_pos(1 / 10)
+        if self.in_bounds(x + xp, y + yp):
             entity.vector = vector
+        else:
+            vector.direction = 2 * math.pi * random()
 
+        entity.vector = vector
 
     def check_entity_clicked(self, mouse_pos):
         for entity in self.entity_list:
