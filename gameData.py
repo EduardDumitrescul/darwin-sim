@@ -27,7 +27,10 @@ class GameData:
     def move_entities(self, delta_time):
         for i in range(len(self.entity_list)):
             entity = self.entity_list[i]
-            entity.rect.move_ip(entity.vector.get_relative_pos(delta_time))
+            relative_pos = entity.vector.get_relative_pos(delta_time)
+            entity.x += relative_pos[0]
+            entity.y += relative_pos[1]
+            entity.rect.x, entity.rect.y = entity.x, entity.y
 
     def compute_path(self):
         for i in range(0, len(self.entity_list)):

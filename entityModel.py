@@ -21,6 +21,9 @@ class Entity(pygame.sprite.Sprite):
         self.speed = 2.0
         self.vector = Vector2D()
 
+        self.x = pos[0]
+        self.y = pos[1]
+
         self.image = pygame.Surface([2*ENTITY_RADIUS, 2*ENTITY_RADIUS])
         self.image.fill(COLOR_KEY)
         self.image.set_colorkey(COLOR_KEY)

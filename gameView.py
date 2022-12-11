@@ -27,7 +27,7 @@ class GameView:
         frame_count = 0
 
         while running:
-            delta_time = clock.tick(60) / 1000
+            delta_time = clock.tick() / 1000
             print(delta_time)
             frame_count += 1
             for event in pygame.event.get():
@@ -35,7 +35,7 @@ class GameView:
                     running = False
 
             print(f'frame {frame_count}')
-            if frame_count % 5 == 0:
+            if frame_count % 4 == 0:
                 self.game_data.compute_path()
             self.game_data.move_entities(delta_time)
 
