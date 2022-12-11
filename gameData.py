@@ -8,7 +8,7 @@ from entityModel import Entity
 
 
 class GameData:
-    def __init__(self, world_width, world_height, entity_count=20):
+    def __init__(self, world_width, world_height, entity_count=10):
         self.world_width = world_width
         self.world_height = world_height
         self.entity_count = entity_count
@@ -24,14 +24,22 @@ class GameData:
             self.spriteGroup.add(ent)
             self.entity_list.append(ent)
 
-    def move_entities(self):
+    def move_entities(self, delta_time):
+        for i in range(len(self.entity_list)):
+            entity = self.entity_list[i]
+            entity.rect.move_ip(entity.vector.get_relative_pos(delta_time))
+
+    def compute_path(self):
         for i in range(0, len(self.entity_list)):
             entity = self.entity_list[i]
-            while True:
-                angle = random() * 2 * math.pi
-                x = entity.rect.x + entity.speed * math.cos(angle)
-                y = entity.rect.y + entity.speed * math.sin(angle)
-                if 0 <= x <= self.world_width - 2 * entityModel.ENTITY_RADIUS and \
-                        0 <= y <= self.world_height - 2 * entityModel.ENTITY_RADIUS:
-                    entity.rect.move_ip(entity.speed * math.cos(angle), entity.speed * math.sin(angle))
-                    break
+
+            vector = entity.vector.get_random_direction()
+            x, y = entity.rect.x, entity.rect.y
+            xp, yp = vector.get_relative_pos(1)
+            if 0 <= x + xp <= self.world_width - 2 * entityModel.ENTITY_RADIUS and \
+                    0 <= y + yp <= self.world_height - 2 * entityModel.ENTITY_RADIUS:
+                entity.vector = vector
+            else:
+                vector.direction = 2 * math.pi * random()
+
+            entity.vector = vector

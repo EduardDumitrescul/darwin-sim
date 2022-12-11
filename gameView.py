@@ -27,13 +27,17 @@ class GameView:
         frame_count = 0
 
         while running:
+            delta_time = clock.tick(60) / 1000
+            print(delta_time)
             frame_count += 1
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
 
             print(f'frame {frame_count}')
-            self.game_data.move_entities()
+            if frame_count % 5 == 0:
+                self.game_data.compute_path()
+            self.game_data.move_entities(delta_time)
 
             self.display.fill(WHITE)
 
@@ -41,4 +45,3 @@ class GameView:
                 self.display.blit(entity.image, entity.rect)
 
             pygame.display.flip()
-            clock.tick(60)
