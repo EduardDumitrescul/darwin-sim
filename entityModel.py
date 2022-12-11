@@ -22,6 +22,7 @@ class Entity(pygame.sprite.Sprite):
         super().__init__()
 
         self.speed = 2.0
+        self.vision = 50.0
         self.vector = Vector2D()
 
         self.x = pos[0]
@@ -41,4 +42,12 @@ class Entity(pygame.sprite.Sprite):
             pygame.draw.circle(self.image, SELECTED_COLOR, (ENTITY_RADIUS, ENTITY_RADIUS), ENTITY_RADIUS)
         else:
             pygame.draw.circle(self.image, BASE_COLOR, (ENTITY_RADIUS, ENTITY_RADIUS), ENTITY_RADIUS)
+
+    def distance(self, entity):
+        return pygame.math.Vector2(self.x, self.y).distance_to((entity.x, entity.y))
+
+    def angle(self, entity):
+        dx = entity.x - self.x
+        dy = entity.y - self.y
+        return math.atan2(dy, dx)
 
