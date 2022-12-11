@@ -17,6 +17,9 @@ class GameData:
 
         self.create_entities()
 
+        self.in_bounds = lambda x, y: 0 <= x <= self.world_width - 2 * entityModel.ENTITY_RADIUS and \
+                                 0 <= y <= self.world_height - 2 * entityModel.ENTITY_RADIUS
+
     def create_entities(self):
         for i in range(self.entity_count):
             ent = Entity(pos=(random() * (self.world_width - 2 * entityModel.ENTITY_RADIUS),
@@ -28,9 +31,13 @@ class GameData:
         for i in range(len(self.entity_list)):
             entity = self.entity_list[i]
             relative_pos = entity.vector.get_relative_pos(delta_time)
-            entity.x += relative_pos[0]
-            entity.y += relative_pos[1]
-            entity.rect.x, entity.rect.y = entity.x, entity.y
+            x = entity.x + relative_pos[0]
+            y = entity.y + relative_pos[1]
+            if self.in_bounds(x, y):
+                entity.x, entity.y = x, y
+                entity.rect.x, entity.rect.y = entity.x, entity.y
+            else:
+                entity.vector.direction = 2 * math.pi * random()
 
     def compute_path(self):
         for i in range(0, len(self.entity_list)):
@@ -39,13 +46,13 @@ class GameData:
             vector = entity.vector.get_random_direction()
             x, y = entity.rect.x, entity.rect.y
             xp, yp = vector.get_relative_pos(1/10)
-            if 0 <= x + xp <= self.world_width - 2 * entityModel.ENTITY_RADIUS and \
-                    0 <= y + yp <= self.world_height - 2 * entityModel.ENTITY_RADIUS:
+            if self.in_bounds(x, y):
                 entity.vector = vector
             else:
                 vector.direction = 2 * math.pi * random()
 
             entity.vector = vector
+
 
     def check_entity_clicked(self, mouse_pos):
         for entity in self.entity_list:
