@@ -2,6 +2,7 @@ import pygame
 
 import gameData
 from gameData import GameData
+from gameInfoSurface import GameInfoSurface
 from gameSurface import GameSurface
 
 WHITE = (255, 255, 255)
@@ -9,7 +10,13 @@ WHITE = (255, 255, 255)
 
 class GameView:
     def __init__(self, display_width, display_height):
-        self.game_data = GameData(display_width, display_height)
+        self.game_data = GameData(display_width - 200, display_height)
+        self.game_surface = GameSurface(display_width - 200, display_height, self.game_data)
+        self.game_surface_pos = (0, 0)
+
+        self.game_info_surface = GameInfoSurface(200, display_height, self.game_data)
+        self.game_info_surface_pos = (display_width - 200, 0)
+
         self.display = None
         self.display_width = display_width
         self.display_height = display_height
@@ -46,7 +53,9 @@ class GameView:
             self.display.fill(WHITE)
 
             self.game_surface.update()
-            self.display.blit(self.game_surface, (0, 0))
+            self.display.blit(self.game_surface, self.game_surface_pos)
+
+            self.display.blit(self.game_info_surface, self.game_info_surface_pos)
 
             # for entity in self.game_data.entity_list:
             #     self.display.blit(entity.image, entity.rect)
