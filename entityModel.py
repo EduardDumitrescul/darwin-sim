@@ -10,7 +10,7 @@ WHITE = (255, 255, 255)
 COLOR_KEY = (255, 0, 255)
 
 BASE_COLOR = (188, 169, 225)
-SELECTED_COLOR = (152,167,242)
+SELECTED_COLOR = (152, 167, 242)
 
 
 class Entity(pygame.sprite.Sprite):

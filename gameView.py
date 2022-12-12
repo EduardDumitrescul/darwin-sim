@@ -1,6 +1,8 @@
 import pygame
 
+import gameData
 from gameData import GameData
+from gameSurface import GameSurface
 
 WHITE = (255, 255, 255)
 
@@ -43,7 +45,10 @@ class GameView:
 
             self.display.fill(WHITE)
 
-            for entity in self.game_data.entity_list:
-                self.display.blit(entity.image, entity.rect)
+            self.game_surface.update()
+            self.display.blit(self.game_surface, (0, 0))
+
+            # for entity in self.game_data.entity_list:
+            #     self.display.blit(entity.image, entity.rect)
 
             pygame.display.flip()
