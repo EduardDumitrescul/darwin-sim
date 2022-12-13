@@ -4,6 +4,7 @@ from random import random
 import pygame.sprite
 
 import entityModel
+import foodModel
 from entityModel import Entity
 
 
@@ -12,6 +13,13 @@ class GameData:
         self.world_width = world_width
         self.world_height = world_height
         self.entity_count = entity_count
+
+        self.food_sprite_group = pygame.sprite.Group()
+        self.food_entity_list = []
+        self.food_count_limit = 10
+        self.food_spawn_rate = 10  # 1 every 10 ticks
+        self.food_spawn_last_tick = -1e9
+
         self.spriteGroup = pygame.sprite.Group()
         self.entity_list = []
 
@@ -26,6 +34,17 @@ class GameData:
                               random() * (self.world_height - 2 * entityModel.ENTITY_RADIUS)))
             self.spriteGroup.add(ent)
             self.entity_list.append(ent)
+
+    def update(self, current_tick):
+        if current_tick - self.food_spawn_last_tick > self.food_count_limit > len(self.food_entity_list):
+            self.food_spawn_last_tick = current_tick
+            self.create_food_entity()
+
+    def create_food_entity(self):
+        food_entity = foodModel.FoodModel(pos=(random() * (self.world_width - 2 * foodModel.RADIUS),
+                                               random() * (self.world_height - 2 * foodModel.RADIUS)))
+        self.food_entity_list.append(food_entity)
+        self.food_sprite_group.add(food_entity)
 
     def move_entities(self, delta_time):
         for i in range(len(self.entity_list)):
