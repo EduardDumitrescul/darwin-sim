@@ -19,5 +19,4 @@ class GameSurface(pygame.surface.Surface):
         for entity in self.game_data.entity_list:
             self.blit(entity.image, entity.rect)
 
-        for food_entity in self.game_data.food_entity_list:
-            self.blit(food_entity.image, food_entity.rect)
+        self.game_data.food_sprite_group.draw(self)

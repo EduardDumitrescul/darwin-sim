@@ -24,6 +24,7 @@ class Entity(pygame.sprite.Sprite):
         self.speed = 2.0
         self.vision = 50.0
         self.vector = Vector2D()
+        self.food_collected = 0
 
         self.x = pos[0]
         self.y = pos[1]
@@ -50,4 +51,3 @@ class Entity(pygame.sprite.Sprite):
         dx = entity.x - self.x
         dy = entity.y - self.y
         return math.atan2(dy, dx)
-

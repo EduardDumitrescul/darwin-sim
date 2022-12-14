@@ -60,7 +60,7 @@ class GameView:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.game_data.check_entity_clicked(pygame.mouse.get_pos())
 
-            print(f'frame {frame_count}')
+            # print(f'frame {frame_count}')
 
             self.update_view(delta_time)
 
