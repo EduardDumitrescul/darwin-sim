@@ -9,6 +9,9 @@ WHITE = (255, 255, 255)
 
 INFO_SURFACE_WIDTH = 200
 
+FPS = 60
+TPS = 12
+
 
 class GameView:
     def __init__(self, display_width, display_height):
@@ -37,12 +40,20 @@ class GameView:
 
         frame_count = 0
 
+        last_tick_millis = 0
+        tick_count = 0
+
         while running:
             delta_time = clock.tick(60) / 1000
-            current_ticks = pygame.time.get_ticks()
+            current_ticks_millis = pygame.time.get_ticks()
 
-            print(current_ticks)
+            if current_ticks_millis - last_tick_millis > 1000.0 / TPS:
+                tick_count += 1
+                last_tick_millis = current_ticks_millis
+                self.update_logic()
+
             frame_count += 1
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -50,20 +61,19 @@ class GameView:
                     self.game_data.check_entity_clicked(pygame.mouse.get_pos())
 
             print(f'frame {frame_count}')
-            if frame_count % 4 == 0:
-                self.game_data.compute_path()
-            self.game_data.move_entities(delta_time)
 
-            self.game_data.update(current_ticks)
+            self.update_view(delta_time)
 
-            self.display.fill(WHITE)
+    def update_logic(self):
+        self.game_data.update()
+        self.game_data.compute_path()
 
-            self.game_surface.update()
-            self.display.blit(self.game_surface, self.game_surface_pos)
+    def update_view(self, delta_time):
+        self.display.fill(WHITE)
+        self.game_surface.update()
+        self.display.blit(self.game_surface, self.game_surface_pos)
+        self.display.blit(self.game_info_surface, self.game_info_surface_pos)
 
-            self.display.blit(self.game_info_surface, self.game_info_surface_pos)
+        self.game_data.move_entities(delta_time)
 
-            # for entity in self.game_data.entity_list:
-            #     self.display.blit(entity.image, entity.rect)
-
-            pygame.display.flip()
+        pygame.display.flip()

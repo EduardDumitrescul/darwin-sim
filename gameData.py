@@ -35,9 +35,8 @@ class GameData:
             self.spriteGroup.add(ent)
             self.entity_list.append(ent)
 
-    def update(self, current_tick):
-        if current_tick - self.food_spawn_last_tick > self.food_count_limit > len(self.food_entity_list):
-            self.food_spawn_last_tick = current_tick
+    def update(self):
+        if self.food_count_limit > len(self.food_entity_list):
             self.create_food_entity()
 
     def create_food_entity(self):
