@@ -66,25 +66,48 @@ class GameData:
     def compute_path(self):
         for i in range(len(self.entity_list)):
             entity = self.entity_list[i]
-            enemy_angle_sum = 0
-            enemy_count = 0
-            for j in range(0, len(self.entity_list)):
-                if i == j:
-                    continue
+            if not self.choose_path_based_on_enemies(entity):
+                if not self.choose_path_to_food(entity):
+                    self.choose_random_path(entity)
 
-                enemy = self.entity_list[j]
-                if entity.distance(enemy) > entity.vision:
-                    continue
+    def choose_path_based_on_enemies(self, entity):
 
-                enemy_angle_sum += entity.angle(enemy)
-                enemy_count += 1
+        return False
 
-            if enemy_count == 0:
-                self.choose_random_path(entity)
+        enemy_angle_sum = 0
+        enemy_count = 0
+        for j in range(0, len(self.entity_list)):
+            if entity == self.entity_list[j]:
                 continue
 
-            enemy_angle_sum /= enemy_count
-            entity.vector.direction = (enemy_angle_sum + math.pi) % (2 * math.pi)
+            enemy = self.entity_list[j]
+            if entity.distance(enemy) > entity.vision:
+                continue
+
+            enemy_angle_sum += entity.angle(enemy)
+            enemy_count += 1
+
+        if enemy_count == 0:
+            return False
+
+        enemy_angle_sum /= enemy_count
+        entity.vector.direction = (enemy_angle_sum + math.pi) % (2 * math.pi)
+
+        return True
+
+    def choose_path_to_food(self, entity):
+        min_dist = 1e9
+        target = None
+        for food in self.food_sprite_group:
+            if min_dist > entity.distance(food):
+                min_dist = entity.distance(food)
+                target = food
+
+        if entity.distance(target) > entity.vision:
+            return False
+
+        entity.vector.direction = entity.angle(target)
+        return True
 
     def choose_random_path(self, entity):
         vector = entity.vector.get_random_direction()

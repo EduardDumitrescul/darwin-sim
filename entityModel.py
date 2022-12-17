@@ -1,5 +1,6 @@
 import math
 import random
+import sys
 
 import pygame.sprite
 
@@ -22,7 +23,7 @@ class Entity(pygame.sprite.Sprite):
         super().__init__()
 
         self.speed = 2.0
-        self.vision = 50.0
+        self.vision = 200.0
         self.vector = Vector2D()
         self.food_collected = 0
 
@@ -45,6 +46,8 @@ class Entity(pygame.sprite.Sprite):
             pygame.draw.circle(self.image, BASE_COLOR, (ENTITY_RADIUS, ENTITY_RADIUS), ENTITY_RADIUS)
 
     def distance(self, entity):
+        if entity is None:
+            return sys.maxsize
         return pygame.math.Vector2(self.x, self.y).distance_to((entity.x, entity.y))
 
     def angle(self, entity):
