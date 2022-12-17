@@ -46,7 +46,6 @@ class GameData:
             if type(ent) is Entity:
                 ent.food_collected += 1
 
-
     def create_food_entity(self):
         food_entity = foodModel.FoodModel(pos=(random() * (self.world_width - 2 * foodModel.RADIUS),
                                                random() * (self.world_height - 2 * foodModel.RADIUS)))
@@ -99,8 +98,12 @@ class GameData:
         entity.vector = vector
 
     def check_entity_clicked(self, mouse_pos):
+        selected_entity = None
         for entity in self.entity_list:
             if entity.rect.collidepoint(mouse_pos):
                 entity.set_selected(True)
+                selected_entity = entity
             else:
                 entity.set_selected(False)
+
+        return selected_entity

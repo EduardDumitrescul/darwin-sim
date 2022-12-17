@@ -21,6 +21,7 @@ class GameView:
 
         self.game_info_surface = GameInfoSurface(INFO_SURFACE_WIDTH, display_height, self.game_data)
         self.game_info_surface_pos = (display_width - INFO_SURFACE_WIDTH, 0)
+        self.selected_entity = None
 
         self.display = None
         self.display_width = display_width
@@ -58,7 +59,7 @@ class GameView:
                 if event.type == pygame.QUIT:
                     running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.game_data.check_entity_clicked(pygame.mouse.get_pos())
+                    self.selected_entity = self.game_data.check_entity_clicked(pygame.mouse.get_pos())
 
             # print(f'frame {frame_count}')
 
@@ -72,6 +73,7 @@ class GameView:
         self.display.fill(WHITE)
         self.game_surface.update()
         self.display.blit(self.game_surface, self.game_surface_pos)
+        self.game_info_surface.update(self.selected_entity)
         self.display.blit(self.game_info_surface, self.game_info_surface_pos)
 
         self.game_data.move_entities(delta_time)

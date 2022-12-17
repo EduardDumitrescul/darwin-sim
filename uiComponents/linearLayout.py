@@ -1,5 +1,7 @@
 from pygame import Surface
 
+WHITE = (255, 255, 255)
+
 VERTICAL = 0
 HORIZONTAL = 1
 
@@ -26,6 +28,7 @@ class LinearLayout(Surface):
         self.update()
 
     def update(self):
+        self.fill(WHITE)
         x, y = self.padding_begin, self.padding_top
         for surface in self.surface_list:
             self.blit(surface, [x, y])
