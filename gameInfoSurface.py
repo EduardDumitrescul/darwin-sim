@@ -1,6 +1,7 @@
 from pygame import Surface
 
 from entityInfoSurface import EntityInfoSurface
+from foodInfoSurface import FoodInfoSurface
 from uiComponents import linearLayout
 from uiComponents.linearLayout import LinearLayout
 
@@ -17,9 +18,13 @@ class GameInfoSurface(Surface):
 
         self.fill(WHITE)
 
-    def update(self, entity=None):
+    def update(self, entity=None, food=None):
         self.fill(WHITE)
 
         if entity is not None:
             entity_info_surface = EntityInfoSurface([self.get_rect().width, 200], entity)
             self.blit(entity_info_surface, [0, 0])
+        elif food is not None:
+            food_info_surface = FoodInfoSurface([self.get_rect().width, 100], food)
+            self.blit(food_info_surface, [0, 0])
+

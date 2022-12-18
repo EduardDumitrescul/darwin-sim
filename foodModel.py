@@ -1,6 +1,7 @@
 import pygame.sprite
 
 ORANGE = (150, 50, 0)
+ORANGE_SELECTED = (150, 100, 0)
 WHITE = (255, 255, 255)
 RADIUS = 10
 
@@ -21,4 +22,12 @@ class FoodModel(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.move_ip(pos)
 
+        self.targeted_by = None
+        self.is_selected = False
 
+    def set_selected(self, boolean):
+        self.is_selected = boolean
+        if boolean == False:
+            pygame.draw.circle(self.image, ORANGE, (RADIUS, RADIUS), RADIUS)
+        else:
+            pygame.draw.circle(self.image, ORANGE_SELECTED, (RADIUS, RADIUS), RADIUS)

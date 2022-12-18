@@ -16,6 +16,7 @@ class GameData:
         self.entity_count = entity_count
 
         self.food_sprite_group = Group()
+        self.food_list = []
         self.food_count_limit = 10
         self.food_spawn_rate = 10  # 1 every 10 ticks
         self.food_spawn_last_tick = -1e9
@@ -99,12 +100,21 @@ class GameData:
         min_dist = 1e9
         target = None
         for food in self.food_sprite_group:
-            if min_dist > entity.distance(food):
-                min_dist = entity.distance(food)
-                target = food
+            if type(food) == foodModel.FoodModel:
+                if food.targeted_by is None:
+                    if min_dist > entity.distance(food):
+                        min_dist = entity.distance(food)
+                        target = food
+                elif type(food.targeted_by) is Entity:
+                    if min_dist > entity.distance(food) and (food.targeted_by.distance(food) > entity.distance(food) or food.targeted_by == entity):
+                        min_dist = entity.distance(food)
+                        target = food
 
         if entity.distance(target) > entity.vision:
             return False
+
+        if type(target) is foodModel.FoodModel:
+            target.targeted_by = entity
 
         entity.vector.direction = entity.angle(target)
         return True
@@ -130,3 +140,16 @@ class GameData:
                 entity.set_selected(False)
 
         return selected_entity
+
+    def check_food_clicked(self, mouse_pos):
+        selected_food = None
+        for food in self.food_sprite_group:
+            if type(food) is not foodModel.FoodModel:
+                continue
+            if food.rect.collidepoint(mouse_pos):
+                food.set_selected(True)
+                selected_food = food
+            else:
+                food.set_selected(False)
+
+        return selected_food

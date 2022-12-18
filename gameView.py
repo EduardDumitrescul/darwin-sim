@@ -22,6 +22,7 @@ class GameView:
         self.game_info_surface = GameInfoSurface(INFO_SURFACE_WIDTH, display_height, self.game_data)
         self.game_info_surface_pos = (display_width - INFO_SURFACE_WIDTH, 0)
         self.selected_entity = None
+        self.selected_food = None
 
         self.display = None
         self.display_width = display_width
@@ -60,6 +61,7 @@ class GameView:
                     running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.selected_entity = self.game_data.check_entity_clicked(pygame.mouse.get_pos())
+                    self.selected_food = self.game_data.check_food_clicked(pygame.mouse.get_pos())
 
             # print(f'frame {frame_count}')
 
@@ -73,7 +75,7 @@ class GameView:
         self.display.fill(WHITE)
         self.game_surface.update()
         self.display.blit(self.game_surface, self.game_surface_pos)
-        self.game_info_surface.update(self.selected_entity)
+        self.game_info_surface.update(self.selected_entity, self.selected_food)
         self.display.blit(self.game_info_surface, self.game_info_surface_pos)
 
         self.game_data.move_entities(delta_time)
