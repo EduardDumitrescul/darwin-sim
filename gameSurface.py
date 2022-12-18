@@ -1,7 +1,7 @@
 import pygame.surface
 
 WHITE = (255, 255, 255)
-DEBUG = (255, 100, 255)
+DEBUG = (10, 10, 10)
 
 
 class GameSurface(pygame.surface.Surface):
