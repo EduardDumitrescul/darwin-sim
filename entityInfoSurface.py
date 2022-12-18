@@ -15,7 +15,9 @@ class EntityInfoSurface(LinearLayout):
         self.draw_text()
 
     def draw_text(self):
-        font = Font('resources/OpenSans-Regular.ttf', 20)
+        font = Font('resources/OpenSans-Regular.ttf', 12)
+        text_health = font.render(f'health = {self.entity.health}', True, BLACK, WHITE)
+        self.add_surface(text_health)
         text_vision = font.render(f'vision = {self.entity.vision}', True, BLACK, WHITE)
         self.add_surface(text_vision)
         text_speed = font.render(f'speed = {self.entity.speed}', True, BLACK, WHITE)

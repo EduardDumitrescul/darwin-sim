@@ -13,6 +13,10 @@ COLOR_KEY = (255, 0, 255)
 BASE_COLOR = (188, 169, 225)
 SELECTED_COLOR = (152, 167, 242)
 
+HEALTH_UPDATE_TICK = 6
+HEALTH_GAIN_FROM_FOOD = 5
+HEALTH_BASE_LOSS = 1
+
 
 class Entity(pygame.sprite.Sprite):
     def __init__(self, pos=(0, 0)):
@@ -22,6 +26,9 @@ class Entity(pygame.sprite.Sprite):
         """
         super().__init__()
 
+        self.max_health = 100
+        self.health = 100
+        self.health_tick_count = 0
         self.speed = 2.0
         self.vision = 200.0
         self.vector = Vector2D()
@@ -49,6 +56,9 @@ class Entity(pygame.sprite.Sprite):
         if entity is None:
             return sys.maxsize
         return pygame.math.Vector2(self.x, self.y).distance_to((entity.x, entity.y))
+
+    def distance_from_point(self, x, y):
+        return pygame.math.Vector2(self.x, self.y).distance_to((x, y))
 
     def angle(self, entity):
         dx = entity.x - self.x

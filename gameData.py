@@ -10,6 +10,7 @@ import foodModel
 from entityModel import Entity
 
 
+
 class GameData:
     def __init__(self, world_width, world_height, entity_count=10):
         self.world_width = world_width
@@ -22,8 +23,7 @@ class GameData:
         self.food_spawn_rate = 10  # 1 every 10 ticks
         self.food_spawn_last_tick = -1e9
 
-        self.spriteGroup = Group()
-        self.entity_list = []
+        self.entity_sprite_group = Group()
 
         self.create_entities()
 
@@ -33,22 +33,38 @@ class GameData:
         self.start_time = time.time()
         self.total_food_collected = 0
 
-
-
     def create_entities(self):
         for i in range(self.entity_count):
             ent = Entity(pos=(random() * (self.world_width - 2 * entityModel.ENTITY_RADIUS),
                               random() * (self.world_height - 2 * entityModel.ENTITY_RADIUS)))
-            self.spriteGroup.add(ent)
-            self.entity_list.append(ent)
+            self.entity_sprite_group.add(ent)
 
     def update(self):
         self.check_collisions()
         if self.food_count_limit > len(self.food_sprite_group):
             self.create_food_entity()
 
+        for entity in self.entity_sprite_group:
+            if type(entity) is Entity:
+                self.update_entity_stats(entity)
+
+    def update_entity_stats(self, entity):
+        entity.health_tick_count += 1
+        if entity.health_tick_count == entityModel.HEALTH_UPDATE_TICK:
+            entity.health_tick_count = 0
+            entity.health -= entityModel.HEALTH_BASE_LOSS * entity.speed
+
+        if int(entity.food_collected) > 0:
+            entity.food_collected -= 1
+            entity.health += entityModel.HEALTH_GAIN_FROM_FOOD
+            entity.health = min(entity.health, entity.max_health)
+
+        if entity.health <= 0:
+            self.entity_list.remove(entity)
+            self.entity_sprite_group.remove(entity)
+
     def check_collisions(self):
-        dict_entity_food = pygame.sprite.groupcollide(self.spriteGroup, self.food_sprite_group, False, True)
+        dict_entity_food = pygame.sprite.groupcollide(self.entity_sprite_group, self.food_sprite_group, False, True)
         for ent in dict_entity_food:
             if type(ent) is Entity:
                 ent.food_collected += 1
@@ -60,8 +76,9 @@ class GameData:
         self.food_sprite_group.add(food_entity)
 
     def move_entities(self, delta_time):
-        for i in range(len(self.entity_list)):
-            entity = self.entity_list[i]
+        for entity in self.entity_sprite_group:
+            if type(entity) is not Entity:
+                continue
             relative_pos = entity.vector.get_relative_pos(delta_time)
             x = entity.x + relative_pos[0] * entity.speed
             y = entity.y + relative_pos[1] * entity.speed
@@ -72,8 +89,9 @@ class GameData:
                 entity.vector.direction = 2 * math.pi * random()
 
     def compute_path(self):
-        for i in range(len(self.entity_list)):
-            entity = self.entity_list[i]
+        for entity in self.entity_sprite_group:
+            if type(entity) is not Entity:
+                continue
             if not self.choose_path_based_on_enemies(entity):
                 if not self.choose_path_to_food(entity):
                     self.choose_random_path(entity)
@@ -84,11 +102,11 @@ class GameData:
 
         enemy_angle_sum = 0
         enemy_count = 0
-        for j in range(0, len(self.entity_list)):
-            if entity == self.entity_list[j]:
+        for enemy in self.entity_sprite_group:
+            if type(enemy) is not Entity:
                 continue
-
-            enemy = self.entity_list[j]
+            if enemy == entity:
+                continue
             if entity.distance(enemy) > entity.vision:
                 continue
 
@@ -113,7 +131,8 @@ class GameData:
                         min_dist = entity.distance(food)
                         target = food
                 elif type(food.targeted_by) is Entity:
-                    if min_dist > entity.distance(food) and (food.targeted_by.distance(food) > entity.distance(food) or food.targeted_by == entity):
+                    if min_dist > entity.distance(food) and (
+                            food.targeted_by.distance(food) > entity.distance(food) or food.targeted_by == entity):
                         min_dist = entity.distance(food)
                         target = food
 
@@ -139,7 +158,9 @@ class GameData:
 
     def check_entity_clicked(self, mouse_pos):
         selected_entity = None
-        for entity in self.entity_list:
+        for entity in self.entity_sprite_group:
+            if type(entity) is not Entity:
+                continue
             if entity.rect.collidepoint(mouse_pos):
                 entity.set_selected(True)
                 selected_entity = entity
