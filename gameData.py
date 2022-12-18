@@ -63,8 +63,8 @@ class GameData:
         for i in range(len(self.entity_list)):
             entity = self.entity_list[i]
             relative_pos = entity.vector.get_relative_pos(delta_time)
-            x = entity.x + relative_pos[0]
-            y = entity.y + relative_pos[1]
+            x = entity.x + relative_pos[0] * entity.speed
+            y = entity.y + relative_pos[1] * entity.speed
             if self.in_bounds(x, y):
                 entity.x, entity.y = x, y
                 entity.rect.x, entity.rect.y = entity.x, entity.y
