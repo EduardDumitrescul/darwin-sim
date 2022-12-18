@@ -21,7 +21,7 @@ class OverviewInfoSurface(LinearLayout):
 
         text_time_passed = font.render(f'timer: {time.time() - self.game_data.start_time}s', True, BLACK, WHITE)
         self.add_surface(text_time_passed)
-        text_entity_count = font.render(f"entity count: {len(self.game_data.entity_list)}", True, BLACK, WHITE)
+        text_entity_count = font.render(f"entity count: {len(self.game_data.entity_sprite_group)}", True, BLACK, WHITE)
         self.add_surface(text_entity_count)
         text_total_food_collected = font.render(f'total food: {self.game_data.total_food_collected}', True, BLACK, WHITE)
         self.add_surface(text_total_food_collected)

@@ -16,7 +16,6 @@ class GameSurface(pygame.surface.Surface):
 
     def update(self):
         self.fill(DEBUG)
-        for entity in self.game_data.entity_list:
-            self.blit(entity.image, entity.rect)
+        self.game_data.entity_sprite_group.draw(self)
 
         self.game_data.food_sprite_group.draw(self)
