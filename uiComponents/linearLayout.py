@@ -25,9 +25,9 @@ class LinearLayout(Surface):
 
     def add_surface(self, surface):
         self.surface_list.append(surface)
-        self.update()
+        self.refresh()
 
-    def update(self):
+    def refresh(self):
         self.fill(WHITE)
         x, y = self.padding_begin, self.padding_top
         for surface in self.surface_list:

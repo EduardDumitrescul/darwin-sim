@@ -1,0 +1,25 @@
+import time
+
+from pygame.font import Font
+
+from uiComponents import linearLayout
+from uiComponents.linearLayout import LinearLayout
+
+WHITE = (255, 255, 255)
+BLACK = (30, 30, 30)
+
+
+class OverviewInfoSurface(LinearLayout):
+    def __init__(self, size, game_data):
+        super().__init__(size, linearLayout.VERTICAL)
+        self.game_data = game_data
+
+        self.draw_text()
+
+    def draw_text(self):
+        font = Font('resources/OpenSans-Regular.ttf', 16)
+
+        text_time_passed = font.render(f'timer: {time.time() - self.game_data.start_time}s', True, BLACK, WHITE)
+        self.add_surface(text_time_passed)
+        text_total_food_collected = font.render(f'total food: {self.game_data.total_food_collected}', True, BLACK, WHITE)
+        self.add_surface(text_total_food_collected)

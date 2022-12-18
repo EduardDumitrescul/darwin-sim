@@ -1,4 +1,5 @@
 import math
+import time
 from random import random
 
 import pygame.sprite
@@ -29,6 +30,11 @@ class GameData:
         self.in_bounds = lambda x, y: 0 <= x <= self.world_width - 2 * entityModel.ENTITY_RADIUS and \
                                       0 <= y <= self.world_height - 2 * entityModel.ENTITY_RADIUS
 
+        self.start_time = time.time()
+        self.total_food_collected = 0
+
+
+
     def create_entities(self):
         for i in range(self.entity_count):
             ent = Entity(pos=(random() * (self.world_width - 2 * entityModel.ENTITY_RADIUS),
@@ -46,6 +52,7 @@ class GameData:
         for ent in dict_entity_food:
             if type(ent) is Entity:
                 ent.food_collected += 1
+                self.total_food_collected += 1
 
     def create_food_entity(self):
         food_entity = foodModel.FoodModel(pos=(random() * (self.world_width - 2 * foodModel.RADIUS),
