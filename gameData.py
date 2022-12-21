@@ -10,7 +10,6 @@ import foodModel
 from entityModel import Entity
 
 
-
 class GameData:
     def __init__(self, world_width, world_height, entity_count=10):
         self.world_width = world_width
@@ -39,6 +38,16 @@ class GameData:
                               random() * (self.world_height - 2 * entityModel.ENTITY_RADIUS)))
             self.entity_sprite_group.add(ent)
 
+    def check_entity_reproduction(self):
+        for entity in self.entity_sprite_group:
+            if type(entity) is not Entity:
+                continue
+            if entity.food_collected >= entityModel.REPRODUCE_THRESHOLD:
+                entity.food_collected -= entityModel.REPRODUCE_COST
+                entity.food_collected //= 2
+                new_entity = Entity(pos=(entity.x, entity.y))
+                self.entity_sprite_group.add(new_entity)
+
     def update(self):
         self.check_collisions()
         if self.food_count_limit > len(self.food_sprite_group):
@@ -48,13 +57,15 @@ class GameData:
             if type(entity) is Entity:
                 self.update_entity_stats(entity)
 
+        self.check_entity_reproduction()
+
     def update_entity_stats(self, entity):
         entity.health_tick_count += 1
         if entity.health_tick_count == entityModel.HEALTH_UPDATE_TICK:
             entity.health_tick_count = 0
             entity.health -= entityModel.HEALTH_BASE_LOSS * entity.speed
 
-        if int(entity.food_collected) > 0:
+        if int(entity.food_collected) > 0 and entity.max_health - entity.health >= entityModel.HEALTH_GAIN_FROM_FOOD:
             entity.food_collected -= 1
             entity.health += entityModel.HEALTH_GAIN_FROM_FOOD
             entity.health = min(entity.health, entity.max_health)
