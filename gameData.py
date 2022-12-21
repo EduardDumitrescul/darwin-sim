@@ -60,7 +60,6 @@ class GameData:
             entity.health = min(entity.health, entity.max_health)
 
         if entity.health <= 0:
-            self.entity_list.remove(entity)
             self.entity_sprite_group.remove(entity)
 
     def check_collisions(self):
