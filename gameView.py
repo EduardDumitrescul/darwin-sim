@@ -28,6 +28,10 @@ class GameView:
         self.display_width = display_width
         self.display_height = display_height
 
+        self.fps = FPS
+        self.tps = TPS
+        self.speed_multiplier = 1
+
         self.setup_pygame()
         self.start_gameloop()
 
@@ -46,10 +50,11 @@ class GameView:
         tick_count = 0
 
         while running:
-            delta_time = clock.tick(60) / 1000
+            delta_time = self.speed_multiplier * clock.tick(self.fps * self.speed_multiplier) / 1000
             current_ticks_millis = pygame.time.get_ticks()
 
-            if current_ticks_millis - last_tick_millis > 1000.0 / TPS:
+            if current_ticks_millis - last_tick_millis > 1000.0 / (self.tps * self.speed_multiplier):
+                print(self.speed_multiplier)
                 tick_count += 1
                 last_tick_millis = current_ticks_millis
                 self.update_logic()
@@ -62,6 +67,9 @@ class GameView:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.selected_entity = self.game_data.check_entity_clicked(pygame.mouse.get_pos())
                     self.selected_food = self.game_data.check_food_clicked(pygame.mouse.get_pos())
+                    speed = self.game_surface.gamespeed_surface.check_mouseclick(pygame.mouse.get_pos())
+                    self.set_game_speed(speed)
+
 
             # print(f'frame {frame_count}')
 
@@ -81,3 +89,10 @@ class GameView:
         self.game_data.move_entities(delta_time)
 
         pygame.display.flip()
+
+    def set_game_speed(self, speed):
+        if speed is None:
+            return
+        self.speed_multiplier = speed
+        print(speed)
+
