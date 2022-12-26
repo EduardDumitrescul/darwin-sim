@@ -135,18 +135,18 @@ class GameData:
         return True
 
     def choose_path_to_food(self, entity):
-        min_dist = 1e9
+        min_time = 1e9
         target = None
         for food in self.food_sprite_group:
             if type(food) == foodModel.FoodModel:
                 if food.targeted_by is None:
-                    if min_dist > entity.distance(food):
-                        min_dist = entity.distance(food)
+                    if min_time > entity.distance(food) / entity.speed:
+                        min_time = entity.distance(food) / entity.speed
                         target = food
                 elif type(food.targeted_by) is Entity:
-                    if min_dist > entity.distance(food) and (
-                            food.targeted_by.distance(food) > entity.distance(food) or food.targeted_by == entity):
-                        min_dist = entity.distance(food)
+                    if min_time > entity.distance(food) / entity.speed and (
+                            food.targeted_by.distance(food) / food.targeted_by.speed > entity.distance(food) / entity.speed or food.targeted_by == entity):
+                        min_time = entity.distance(food)
                         target = food
 
         if entity.distance(target) > entity.vision:
