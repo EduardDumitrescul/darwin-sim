@@ -40,14 +40,14 @@ class GameData:
             self.entity_sprite_group.add(ent)
 
     def check_entity_reproduction(self, entity):
-        if entity.food_collected >= entityModel.REPRODUCE_THRESHOLD:
-            entity.food_collected -= entityModel.REPRODUCE_COST
+        if entity.food_collected >= entity.reproduction_threshold:
+            entity.food_collected -= entity.reproduction_threshold // 2
             entity.food_collected //= 2
-            new_entity = Entity(pos=(entity.x, entity.y), tick=self.current_tick)
+            new_entity = Entity(pos=(entity.x, entity.y), tick=self.current_tick, entity=entity)
             self.entity_sprite_group.add(new_entity)
 
     def check_entity_age_death(self, entity, tick):
-        if tick - entity.tick_born > entityModel.LIFESPAN:
+        if tick - entity.tick_born > entity.lifespan:
             self.entity_sprite_group.remove(entity)
 
     def update(self, tick):

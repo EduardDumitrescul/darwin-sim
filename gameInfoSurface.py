@@ -22,7 +22,7 @@ class GameInfoSurface(LinearLayout):
     def update(self, entity=None, food=None):
         self.surface_list = []
         self.fill(WHITE)
-        overview_info_surface = OverviewInfoSurface([self.get_rect().width, 100], self.game_data)
+        overview_info_surface = OverviewInfoSurface([self.get_rect().width, 200], self.game_data)
         self.add_surface(overview_info_surface)
 
         if entity is not None:

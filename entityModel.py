@@ -4,6 +4,7 @@ import sys
 
 import pygame.sprite
 
+from mutationModel import MutationModel
 from vector2d import Vector2D
 
 ENTITY_RADIUS = 20
@@ -13,35 +14,32 @@ COLOR_KEY = (255, 0, 255)
 BASE_COLOR = (188, 169, 225)
 SELECTED_COLOR = (152, 167, 242)
 
+MAX_HEALTH = 200
 HEALTH_UPDATE_TICK = 6
-HEALTH_GAIN_FROM_FOOD = 20
-HEALTH_BASE_LOSS = 2
-REPRODUCE_THRESHOLD = 20  # does not affect theoretical max entity count
-REPRODUCE_COST = 16 # does not affect theoretical max entity count
-LIFESPAN = 5000
+HEALTH_GAIN_FROM_FOOD = 40
+HEALTH_BASE_LOSS = 1
+REPRODUCE_THRESHOLD = 12  # does not affect theoretical max entity count
+REPRODUCE_COST = 16  # does not affect theoretical max entity count
+LIFESPAN = 1000
+SPEED = 0.5
+VISION = 50
 
 
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, pos=(0, 0), tick=0):
+    def __init__(self, pos=(0, 0), tick=0, entity=None):
         """
 
         :param pos: tuple(float, float)
         """
         super().__init__()
 
-        self.max_health = 100
-        self.health = 100
-        self.health_tick_count = 0
-        self.speed = 2.0
-        self.vision = 200.0
+        self.tick_born = tick
         self.vector = Vector2D()
         self.food_collected = 0
-        self.tick_born = tick
 
         self.x = pos[0]
         self.y = pos[1]
-
-        self.image = pygame.Surface([2*ENTITY_RADIUS, 2*ENTITY_RADIUS])
+        self.image = pygame.Surface([2 * ENTITY_RADIUS, 2 * ENTITY_RADIUS])
         self.image.fill(COLOR_KEY)
         self.image.set_colorkey(COLOR_KEY)
 
@@ -49,6 +47,18 @@ class Entity(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.move_ip(pos)
+
+        self.mutation = MutationModel()
+        if entity is not None:
+            self.mutation.mutate(entity)
+
+        self.max_health = MAX_HEALTH * self.mutation.max_health
+        self.health = self.max_health
+        self.health_tick_count = 0
+        self.speed = SPEED * self.mutation.speed
+        self.vision = VISION * self.mutation.vision
+        self.lifespan = LIFESPAN * self.mutation.lifespan
+        self.reproduction_threshold = REPRODUCE_THRESHOLD * self.mutation.reproduction_threshold
 
     def set_selected(self, boolean):
         if boolean:

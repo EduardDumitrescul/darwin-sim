@@ -1,5 +1,6 @@
-Entity Model:
-- mass
-- speed vector
-- acceleration vector
-- force vector
+Entity mutations:
+- speed (increases speed, increases hunger)
+- vision (increases vision)
+- max health (increases max health, increases hunger)
+- reproduction threshold
+- lifespan
