@@ -30,6 +30,7 @@ class GameData:
                                       0 <= y <= self.world_height - 2 * entityModel.ENTITY_RADIUS
 
         self.start_time = time.time()
+        self.current_tick = 0
         self.total_food_collected = 0
 
     def create_entities(self):
@@ -45,10 +46,11 @@ class GameData:
             if entity.food_collected >= entityModel.REPRODUCE_THRESHOLD:
                 entity.food_collected -= entityModel.REPRODUCE_COST
                 entity.food_collected //= 2
-                new_entity = Entity(pos=(entity.x, entity.y))
+                new_entity = Entity(pos=(entity.x, entity.y), tick=self.current_tick)
                 self.entity_sprite_group.add(new_entity)
 
-    def update(self):
+    def update(self, tick):
+        self.current_tick = tick
         self.check_collisions()
         if self.food_count_limit > len(self.food_sprite_group):
             self.create_food_entity()

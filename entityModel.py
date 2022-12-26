@@ -15,13 +15,13 @@ SELECTED_COLOR = (152, 167, 242)
 
 HEALTH_UPDATE_TICK = 6
 HEALTH_GAIN_FROM_FOOD = 20
-HEALTH_BASE_LOSS = 1
-REPRODUCE_THRESHOLD = 10
-REPRODUCE_COST = 6
+HEALTH_BASE_LOSS = 2
+REPRODUCE_THRESHOLD = 20  # does not affect theoretical max entity count
+REPRODUCE_COST = 16 # does not affect theoretical max entity count
 
 
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, pos=(0, 0)):
+    def __init__(self, pos=(0, 0), tick=0):
         """
 
         :param pos: tuple(float, float)
@@ -35,6 +35,7 @@ class Entity(pygame.sprite.Sprite):
         self.vision = 200.0
         self.vector = Vector2D()
         self.food_collected = 0
+        self.tick_born = tick
 
         self.x = pos[0]
         self.y = pos[1]

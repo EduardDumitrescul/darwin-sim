@@ -57,7 +57,7 @@ class GameView:
                 print(self.speed_multiplier)
                 tick_count += 1
                 last_tick_millis = current_ticks_millis
-                self.update_logic()
+                self.update_logic(tick_count)
 
             frame_count += 1
 
@@ -75,8 +75,8 @@ class GameView:
 
             self.update_view(delta_time)
 
-    def update_logic(self):
-        self.game_data.update()
+    def update_logic(self, tick):
+        self.game_data.update(tick)
         self.game_data.compute_path()
 
     def update_view(self, delta_time):
