@@ -16,9 +16,11 @@ class OverviewInfoSurface(LinearLayout):
 
         self.draw_text()
 
-    def draw_text(self):
+    def draw_text(self, tick=0):
         font = Font('resources/OpenSans-Regular.ttf', 16)
 
+        text_tick = font.render(f'ticks: {self.game_data.current_tick}', True, BLACK, WHITE)
+        self.add_surface(text_tick)
         text_time_passed = font.render(f'timer: {time.time() - self.game_data.start_time}s', True, BLACK, WHITE)
         self.add_surface(text_time_passed)
         text_entity_count = font.render(f"entity count: {len(self.game_data.entity_sprite_group)}", True, BLACK, WHITE)

@@ -39,15 +39,16 @@ class GameData:
                               random() * (self.world_height - 2 * entityModel.ENTITY_RADIUS)))
             self.entity_sprite_group.add(ent)
 
-    def check_entity_reproduction(self):
-        for entity in self.entity_sprite_group:
-            if type(entity) is not Entity:
-                continue
-            if entity.food_collected >= entityModel.REPRODUCE_THRESHOLD:
-                entity.food_collected -= entityModel.REPRODUCE_COST
-                entity.food_collected //= 2
-                new_entity = Entity(pos=(entity.x, entity.y), tick=self.current_tick)
-                self.entity_sprite_group.add(new_entity)
+    def check_entity_reproduction(self, entity):
+        if entity.food_collected >= entityModel.REPRODUCE_THRESHOLD:
+            entity.food_collected -= entityModel.REPRODUCE_COST
+            entity.food_collected //= 2
+            new_entity = Entity(pos=(entity.x, entity.y), tick=self.current_tick)
+            self.entity_sprite_group.add(new_entity)
+
+    def check_entity_age_death(self, entity, tick):
+        if tick - entity.tick_born > entityModel.LIFESPAN:
+            self.entity_sprite_group.remove(entity)
 
     def update(self, tick):
         self.current_tick = tick
@@ -58,8 +59,8 @@ class GameData:
         for entity in self.entity_sprite_group:
             if type(entity) is Entity:
                 self.update_entity_stats(entity)
-
-        self.check_entity_reproduction()
+                self.check_entity_reproduction(entity)
+                self.check_entity_age_death(entity, tick)
 
     def update_entity_stats(self, entity):
         entity.health_tick_count += 1

@@ -18,6 +18,7 @@ HEALTH_GAIN_FROM_FOOD = 20
 HEALTH_BASE_LOSS = 2
 REPRODUCE_THRESHOLD = 20  # does not affect theoretical max entity count
 REPRODUCE_COST = 16 # does not affect theoretical max entity count
+LIFESPAN = 5000
 
 
 class Entity(pygame.sprite.Sprite):
