@@ -11,15 +11,15 @@ from entityModel import Entity
 
 
 class GameData:
-    def __init__(self, world_width, world_height, entity_count=10):
+    def __init__(self, world_width, world_height, entity_count=1):
         self.world_width = world_width
         self.world_height = world_height
         self.entity_count = entity_count
 
         self.food_sprite_group = Group()
         self.food_list = []
-        self.food_count_limit = 10
-        self.food_spawn_rate = 10  # 1 every 10 ticks
+        self.food_count_limit = 40
+        self.food_spawn_rate = 100  # 1 every 10 ticks
         self.food_spawn_last_tick = -1e9
 
         self.entity_sprite_group = Group()
@@ -53,8 +53,9 @@ class GameData:
     def update(self, tick):
         self.current_tick = tick
         self.check_collisions()
-        if self.food_count_limit > len(self.food_sprite_group):
+        if self.current_tick - self.food_spawn_last_tick > self.food_spawn_rate:
             self.create_food_entity()
+            self.food_spawn_last_tick = self.current_tick
 
         for entity in self.entity_sprite_group:
             if type(entity) is Entity:
@@ -66,7 +67,7 @@ class GameData:
         entity.health_tick_count += 1
         if entity.health_tick_count == entityModel.HEALTH_UPDATE_TICK:
             entity.health_tick_count = 0
-            entity.health -= entityModel.HEALTH_BASE_LOSS * entity.speed
+            entity.health -= entityModel.HEALTH_BASE_LOSS
 
         if int(entity.food_collected) > 0 and entity.max_health - entity.health >= entityModel.HEALTH_GAIN_FROM_FOOD:
             entity.food_collected -= 1
@@ -84,9 +85,10 @@ class GameData:
                 self.total_food_collected += 1
 
     def create_food_entity(self):
-        food_entity = foodModel.FoodModel(pos=(random() * (self.world_width - 2 * foodModel.RADIUS),
-                                               random() * (self.world_height - 2 * foodModel.RADIUS)))
-        self.food_sprite_group.add(food_entity)
+        for i in range(self.food_count_limit):
+            food_entity = foodModel.FoodModel(pos=(random() * (self.world_width - 2 * foodModel.RADIUS),
+                                                   random() * (self.world_height - 2 * foodModel.RADIUS)))
+            self.food_sprite_group.add(food_entity)
 
     def move_entities(self, delta_time):
         for entity in self.entity_sprite_group:

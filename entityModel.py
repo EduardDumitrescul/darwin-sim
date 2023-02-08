@@ -16,13 +16,13 @@ SELECTED_COLOR = (152, 167, 242)
 
 MAX_HEALTH = 200
 HEALTH_UPDATE_TICK = 6
-HEALTH_GAIN_FROM_FOOD = 40
+HEALTH_GAIN_FROM_FOOD = 50
 HEALTH_BASE_LOSS = 1
-REPRODUCE_THRESHOLD = 12  # does not affect theoretical max entity count
+REPRODUCE_THRESHOLD = 10  # does not affect theoretical max entity count
 REPRODUCE_COST = 16  # does not affect theoretical max entity count
 LIFESPAN = 1000
-SPEED = 0.5
-VISION = 50
+SPEED = 1
+VISION = 100
 
 
 class Entity(pygame.sprite.Sprite):
